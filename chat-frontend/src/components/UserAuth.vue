@@ -156,7 +156,7 @@ export default {
       $.post("http://localhost:8000/auth/token/login/", credentials, data => {
         sessionStorage.setItem("authToken", data.auth_token);
         sessionStorage.setItem("username", this.username);
-        this.$router.push("/chats");
+        this.$router.push("/chats/");
       }).fail(response => {
         alert(response.responseText);
       });

@@ -14,47 +14,9 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-sm-6 offset-3" :key="componentKey">
-          <div id="chat-container" class="card">
-            <div
-              class="card-header text-white text-center font-weight-bold subtle-blue-gradient"
-            >
-              {{ roomName }}
-            </div>
-
-            <div class="card-body">
-              <div class="container chat-body">
-                <div class="col-sm-7 offset-3">
-                  <div ></div>
-                  <span id="chat-log" class="card-text speech-bubble speech-bubble-user float-right text-white subtle-blue-gradient">
-                    
-                  </span> 
-                </div>
-              </div>
-            </div>
-
-            <div class="card-footer text-muted">
-              <form @submit.prevent="sendMessage">
-                <div class="row">
-                  <div class="col-sm-10">
-                    <input
-                      required
-                      type="text"
-                      placeholder="Type a message"
-                      v-model="message"
-                    />
-                  </div>
-                  <div class="col-sm-2">
-                    <button class="btn btn-primary">
-                      Send
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
+        <div class="col-sm-6 offset-3">
           <div>
-            <h3 class="text-center">Welcome !</h3>
+            <h3 class="text-center">Welcome <strong>{{username}}</strong> !</h3>
 
             <br />
 
@@ -90,11 +52,9 @@ const $ = window.jQuery;
 export default {
   data() {
     return {
-      componentKey: 0,
-      sessionStarted: false,
       connection: null,
       roomName: String,
-      message: ""
+      username:""
     };
   },
   methods: {
@@ -119,44 +79,16 @@ export default {
     },
     validateRoomCode() {
       if (this.roomName.length <= 5 && this.roomName.length > 0) {
-        this.connectWithRoom(this.roomName);
+        this.$router.push("/chats/" + this.roomName);
       } else {
         alert(
           "Room Code should be less than 5 and must not contain any special charracter"
         );
       }
-    },
-    connectWithRoom(roomName) {
-      console.log("Connecting with WebSocket Server");
-      this.connection = new WebSocket(
-        "ws://localhost:8000/ws/chat/" + roomName + "/"
-      );
-      this.connection.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        var msg =
-          '<span id="chat-log" class="card-text speech-bubble speech-bubble-peer">' +
-          data.message +
-          "</span><hr/>";
-        $("#chat-log").append(msg);
-        console.log(event);
-      };
-      this.connection.onopen = function(event) {
-        console.log(event);
-        console.log("Successfully connected to the echo websocket server...");
-        this.componentKey += 1;
-        this.sessionStarted = true;
-      };
-    },
-    sendMessage() {
-      this.connection.send(
-        JSON.stringify({
-          message: this.message
-        })
-      );
-      this.message = "";
     }
   },
   created: function() {
+    this.username=sessionStorage.getItem("username")
     var length = 4,
       charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
       retVal = "";

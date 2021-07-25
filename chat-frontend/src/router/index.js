@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Chat from '@/components/Chat'
 import UserAuth from '@/components/UserAuth'
+import ChatPlate from '@/components/ChatPlate'
 
 Vue.use(Router)
 
@@ -17,7 +18,12 @@ const router = new Router({
       path: '/auth',
       name: 'UserAuth',
       component: UserAuth
-    }
+    },
+    {
+      path: '/chats/:roomCode',
+      name: 'ChatPlate',
+      component: ChatPlate
+    },
   ]
 })
 
